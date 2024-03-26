@@ -30,6 +30,10 @@ class HomeScreen extends ConsumerWidget {
 
     makeBigCategoryTab();
 
+    if (tabs.isEmpty) {
+      return Container();
+    }
+
     return DefaultTabController(
       length: tabs.length,
       child: Scaffold(
