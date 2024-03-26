@@ -1,13 +1,13 @@
 // ignore_for_file: must_be_immutable
 
 import 'package:flutter/material.dart';
-import 'package:flutter_youtube2/screens/components/parts/video_dialog.dart';
-import 'package:flutter_youtube2/screens/components/video_bunrui_display_alert.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../extensions/extensions.dart';
 import '../../../state/small_category/small_category_notifier.dart';
 import '../../../utility/utility.dart';
+import '../parts/video_dialog.dart';
+import '../video_bunrui_list_alert.dart';
 
 class CategoryListPage extends ConsumerWidget {
   CategoryListPage({super.key, required this.category1, required this.scaffoldKey});
@@ -47,7 +47,10 @@ class CategoryListPage extends ConsumerWidget {
     final list = <Widget>[];
 
     final category2List = <String>[];
-    _ref.watch(smallCategoryProvider(category1).select((value) => value.smallCategoryList)).forEach((element) {
+
+    final smallCategoryList = _ref.watch(smallCategoryProvider(category1).select((value) => value.smallCategoryList));
+
+    smallCategoryList.forEach((element) {
       if (!category2List.contains(element.category2)) {
         list.add(Stack(
           children: [
@@ -93,7 +96,7 @@ class CategoryListPage extends ConsumerWidget {
                     onTap: () {
                       VideoDialog(
                         context: _context,
-                        widget: VideoBunruiDisplayAlert(scaffoldKey: scaffoldKey),
+                        widget: VideoBunruiListAlert(scaffoldKey: scaffoldKey, category2: element.category2, categoryList: smallCategoryList),
                       );
                     },
                   ),

@@ -1,10 +1,10 @@
 // ignore_for_file: must_be_immutable
 
 import 'package:flutter/material.dart';
-import 'package:flutter_youtube2/state/bunrui/bunrui_notifier.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../state/big_category/big_category_notifier.dart';
+import '../state/bunrui/bunrui_notifier.dart';
 import 'components/pages/category_list_page.dart';
 
 class TabInfo {

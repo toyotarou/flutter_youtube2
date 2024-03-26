@@ -1,15 +1,19 @@
 // ignore_for_file: must_be_immutable
 
 import 'package:flutter/material.dart';
-import 'package:flutter_youtube2/state/bunrui/bunrui_notifier.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../extensions/extensions.dart';
+import '../../models/category.dart';
+import '../../state/bunrui/bunrui_notifier.dart';
 
-class VideoBunruiDisplayAlert extends ConsumerWidget {
-  VideoBunruiDisplayAlert({super.key, required this.scaffoldKey});
+class VideoBunruiListAlert extends ConsumerWidget {
+  VideoBunruiListAlert({super.key, required this.scaffoldKey, required this.category2, required this.categoryList});
 
   final GlobalKey<ScaffoldState> scaffoldKey;
+
+  final String category2;
+  final List<Category> categoryList;
 
   late WidgetRef _ref;
 
@@ -43,38 +47,40 @@ class VideoBunruiDisplayAlert extends ConsumerWidget {
               ],
             ),
             Divider(color: Colors.white.withOpacity(0.4), thickness: 5),
-            GestureDetector(
-              child: const Icon(Icons.list),
-              onTap: () {
-                
-                
-                
-                _ref.read(bunruiProvider.notifier).setBunrui(bunrui: 'aaaaa');
-                
-                
-                
-                scaffoldKey.currentState!.openEndDrawer();
-              },
-            ),
-            Divider(color: Colors.white.withOpacity(0.4), thickness: 5),
-            GestureDetector(
-              child: const Icon(Icons.list),
-              onTap: () {
-                _ref.read(bunruiProvider.notifier).setBunrui(bunrui: 'bbbbb');
-                scaffoldKey.currentState!.openEndDrawer();
-              },
-            ),
-            Divider(color: Colors.white.withOpacity(0.4), thickness: 5),
-            GestureDetector(
-              child: const Icon(Icons.list),
-              onTap: () {
-                _ref.read(bunruiProvider.notifier).setBunrui(bunrui: 'ccccc');
-                scaffoldKey.currentState!.openEndDrawer();
-              },
-            ),
+            Expanded(child: _displayBunruiList()),
           ],
         ),
       ),
     );
+  }
+
+  ///
+  Widget _displayBunruiList() {
+    final list = <Widget>[];
+
+    categoryList.where((element) => element.category2 == category2).forEach((element) {
+      list.add(Container(
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.white.withOpacity(0.3)))),
+        child: Row(
+          children: [
+            GestureDetector(
+              onTap: () {
+                _ref.read(bunruiProvider.notifier).setBunrui(bunrui: element.bunrui);
+
+                if (scaffoldKey.currentState != null) {
+                  scaffoldKey.currentState!.openEndDrawer();
+                }
+              },
+              child: const Icon(Icons.ac_unit),
+            ),
+            const SizedBox(width: 20),
+            Text(element.bunrui),
+          ],
+        ),
+      ));
+    });
+
+    return SingleChildScrollView(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: list));
   }
 }
