@@ -47,6 +47,8 @@ class VideoBunruiListAlert extends ConsumerWidget {
   Widget _displayBunruiList() {
     final list = <Widget>[];
 
+    final bunrui = _ref.watch(bunruiProvider.select((value) => value.bunrui));
+
     categoryList.where((element) => element.category2 == category2).forEach((element) {
       list.add(GestureDetector(
         onTap: () {
@@ -61,10 +63,16 @@ class VideoBunruiListAlert extends ConsumerWidget {
         child: Container(
             margin: const EdgeInsets.symmetric(vertical: 5),
             padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 3),
-            decoration: BoxDecoration(border: Border.all(color: Colors.white.withOpacity(0.3))),
+            decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.white.withOpacity(0.3)))),
             child: Row(
               children: [
-                Expanded(child: Text(element.bunrui, maxLines: 1, overflow: TextOverflow.ellipsis)),
+                Expanded(
+                    child: Text(
+                  element.bunrui,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(color: (bunrui == element.bunrui) ? Colors.yellowAccent : Colors.white),
+                )),
                 Container(),
               ],
             )),
