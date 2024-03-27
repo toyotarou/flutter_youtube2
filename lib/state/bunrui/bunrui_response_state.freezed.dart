@@ -17,6 +17,8 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$BunruiResponseState {
   String get bunrui => throw _privateConstructorUsedError;
+  Map<String, Map<String, String>> get bunruiMap =>
+      throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $BunruiResponseStateCopyWith<BunruiResponseState> get copyWith =>
@@ -29,7 +31,7 @@ abstract class $BunruiResponseStateCopyWith<$Res> {
           BunruiResponseState value, $Res Function(BunruiResponseState) then) =
       _$BunruiResponseStateCopyWithImpl<$Res, BunruiResponseState>;
   @useResult
-  $Res call({String bunrui});
+  $Res call({String bunrui, Map<String, Map<String, String>> bunruiMap});
 }
 
 /// @nodoc
@@ -46,12 +48,17 @@ class _$BunruiResponseStateCopyWithImpl<$Res, $Val extends BunruiResponseState>
   @override
   $Res call({
     Object? bunrui = null,
+    Object? bunruiMap = null,
   }) {
     return _then(_value.copyWith(
       bunrui: null == bunrui
           ? _value.bunrui
           : bunrui // ignore: cast_nullable_to_non_nullable
               as String,
+      bunruiMap: null == bunruiMap
+          ? _value.bunruiMap
+          : bunruiMap // ignore: cast_nullable_to_non_nullable
+              as Map<String, Map<String, String>>,
     ) as $Val);
   }
 }
@@ -64,7 +71,7 @@ abstract class _$$BunruiResponseStateImplCopyWith<$Res>
       __$$BunruiResponseStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String bunrui});
+  $Res call({String bunrui, Map<String, Map<String, String>> bunruiMap});
 }
 
 /// @nodoc
@@ -79,12 +86,17 @@ class __$$BunruiResponseStateImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? bunrui = null,
+    Object? bunruiMap = null,
   }) {
     return _then(_$BunruiResponseStateImpl(
       bunrui: null == bunrui
           ? _value.bunrui
           : bunrui // ignore: cast_nullable_to_non_nullable
               as String,
+      bunruiMap: null == bunruiMap
+          ? _value._bunruiMap
+          : bunruiMap // ignore: cast_nullable_to_non_nullable
+              as Map<String, Map<String, String>>,
     ));
   }
 }
@@ -92,15 +104,26 @@ class __$$BunruiResponseStateImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$BunruiResponseStateImpl implements _BunruiResponseState {
-  const _$BunruiResponseStateImpl({this.bunrui = ''});
+  const _$BunruiResponseStateImpl(
+      {this.bunrui = '',
+      final Map<String, Map<String, String>> bunruiMap = const {}})
+      : _bunruiMap = bunruiMap;
 
   @override
   @JsonKey()
   final String bunrui;
+  final Map<String, Map<String, String>> _bunruiMap;
+  @override
+  @JsonKey()
+  Map<String, Map<String, String>> get bunruiMap {
+    if (_bunruiMap is EqualUnmodifiableMapView) return _bunruiMap;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(_bunruiMap);
+  }
 
   @override
   String toString() {
-    return 'BunruiResponseState(bunrui: $bunrui)';
+    return 'BunruiResponseState(bunrui: $bunrui, bunruiMap: $bunruiMap)';
   }
 
   @override
@@ -108,11 +131,14 @@ class _$BunruiResponseStateImpl implements _BunruiResponseState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$BunruiResponseStateImpl &&
-            (identical(other.bunrui, bunrui) || other.bunrui == bunrui));
+            (identical(other.bunrui, bunrui) || other.bunrui == bunrui) &&
+            const DeepCollectionEquality()
+                .equals(other._bunruiMap, _bunruiMap));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, bunrui);
+  int get hashCode => Object.hash(
+      runtimeType, bunrui, const DeepCollectionEquality().hash(_bunruiMap));
 
   @JsonKey(ignore: true)
   @override
@@ -123,11 +149,15 @@ class _$BunruiResponseStateImpl implements _BunruiResponseState {
 }
 
 abstract class _BunruiResponseState implements BunruiResponseState {
-  const factory _BunruiResponseState({final String bunrui}) =
+  const factory _BunruiResponseState(
+          {final String bunrui,
+          final Map<String, Map<String, String>> bunruiMap}) =
       _$BunruiResponseStateImpl;
 
   @override
   String get bunrui;
+  @override
+  Map<String, Map<String, String>> get bunruiMap;
   @override
   @JsonKey(ignore: true)
   _$$BunruiResponseStateImplCopyWith<_$BunruiResponseStateImpl> get copyWith =>

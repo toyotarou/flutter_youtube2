@@ -3,9 +3,13 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../models/category.dart';
 import '../state/big_category/big_category_notifier.dart';
 import '../state/bunrui/bunrui_notifier.dart';
+import '../state/small_category/small_category_notifier.dart';
 import 'components/pages/category_list_page.dart';
+import 'components/parts/video_dialog_horizontal_half.dart';
+import 'components/video_bunrui_list_alert.dart';
 
 class TabInfo {
   TabInfo(this.label, this.widget);
@@ -21,11 +25,13 @@ class HomeScreen extends ConsumerWidget {
 
   final List<TabInfo> tabs = [];
 
+  late BuildContext _context;
   late WidgetRef _ref;
 
   ///
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    _context = context;
     _ref = ref;
 
     makeBigCategoryTab();
@@ -33,6 +39,10 @@ class HomeScreen extends ConsumerWidget {
     if (tabs.isEmpty) {
       return Container();
     }
+
+
+
+
 
     return DefaultTabController(
       length: tabs.length,
@@ -117,6 +127,14 @@ class HomeScreen extends ConsumerWidget {
   Widget _dispEndDrawer() {
     final bunrui = _ref.watch(bunruiProvider.select((value) => value.bunrui));
 
+    final bunruiMap = _ref.watch(bunruiProvider.select((value) => value.bunruiMap));
+
+    var smallCategoryList = <Category>[];
+
+    if (bunruiMap[bunrui] != null) {
+      smallCategoryList = _ref.watch(smallCategoryProvider(bunruiMap[bunrui]!['category1']!).select((value) => value.smallCategoryList));
+    }
+
     return Drawer(
       backgroundColor: Colors.blueGrey.withOpacity(0.2),
       child: Container(
@@ -126,7 +144,62 @@ class HomeScreen extends ConsumerWidget {
           children: [
             const SizedBox(height: 60),
             const Text('end drawer'),
+            Text((bunruiMap[bunrui] != null) ? bunruiMap[bunrui]!['category1']! : ''),
+            Text((bunruiMap[bunrui] != null) ? bunruiMap[bunrui]!['category2']! : ''),
             Text(bunrui),
+            Row(
+              children: [
+                Container(),
+                IconButton(
+                    onPressed: () {
+                      VideoDialogHorizontalHalf(
+                        context: _context,
+                        widget: VideoBunruiListAlert(
+                          scaffoldKey: scaffoldKey,
+                          category2: (bunruiMap[bunrui] != null) ? bunruiMap[bunrui]!['category2']! : '',
+                          categoryList: smallCategoryList,
+                        ),
+                      );
+                    },
+                    icon: const Icon(Icons.ac_unit)),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(),
+                TextButton(
+                  onPressed: () {
+                    _ref.read(bunruiProvider.notifier).setBunrui(bunrui: 'aaaaa');
+                  },
+                  child: const Text('aaaaa'),
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(),
+                TextButton(
+                  onPressed: () {
+                    _ref.read(bunruiProvider.notifier).setBunrui(bunrui: 'bbbbb');
+                  },
+                  child: const Text('bbbbb'),
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(),
+                TextButton(
+                  onPressed: () {
+                    _ref.read(bunruiProvider.notifier).setBunrui(bunrui: 'ccccc');
+                  },
+                  child: const Text('ccccc'),
+                ),
+              ],
+            ),
           ],
         ),
       ),

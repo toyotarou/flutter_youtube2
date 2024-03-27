@@ -36,19 +36,6 @@ class VideoBunruiListAlert extends ConsumerWidget {
           children: [
             const SizedBox(height: 20),
             Container(width: context.screenSize.width),
-            // Row(
-            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //   children: [
-            //     const Column(
-            //       crossAxisAlignment: CrossAxisAlignment.start,
-            //       children: [Text('Credit Input')],
-            //     ),
-            //     Container(),
-            //   ],
-            // ),
-            // Divider(color: Colors.white.withOpacity(0.4), thickness: 5),
-            //
-
             Expanded(child: _displayBunruiList()),
           ],
         ),
@@ -65,6 +52,8 @@ class VideoBunruiListAlert extends ConsumerWidget {
         onTap: () {
           _ref.read(bunruiProvider.notifier).setBunrui(bunrui: element.bunrui);
 
+          _ref.read(bunruiProvider.notifier).getBunruiMap();
+
           if (scaffoldKey.currentState != null) {
             scaffoldKey.currentState!.openEndDrawer();
           }
@@ -74,15 +63,19 @@ class VideoBunruiListAlert extends ConsumerWidget {
             padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 3),
             decoration: BoxDecoration(border: Border.all(color: Colors.white.withOpacity(0.3))),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(element.bunrui),
+                Expanded(child: Text(element.bunrui, maxLines: 1, overflow: TextOverflow.ellipsis)),
                 Container(),
               ],
             )),
       ));
     });
 
-    return SingleChildScrollView(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: list));
+    return SingleChildScrollView(
+      child: DefaultTextStyle(
+        style: const TextStyle(fontSize: 12),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: list),
+      ),
+    );
   }
 }
