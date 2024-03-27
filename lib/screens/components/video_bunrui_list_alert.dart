@@ -6,6 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../extensions/extensions.dart';
 import '../../models/category.dart';
 import '../../state/bunrui/bunrui_notifier.dart';
+import '../../state/video_list/video_list_notifier.dart';
 
 class VideoBunruiListAlert extends ConsumerWidget {
   VideoBunruiListAlert({super.key, required this.scaffoldKey, required this.category2, required this.categoryList});
@@ -53,6 +54,8 @@ class VideoBunruiListAlert extends ConsumerWidget {
           _ref.read(bunruiProvider.notifier).setBunrui(bunrui: element.bunrui);
 
           _ref.read(bunruiProvider.notifier).getBunruiMap();
+
+          _ref.read(videoListProvider.notifier).getVideoList(bunrui: element.bunrui);
 
           if (scaffoldKey.currentState != null) {
             scaffoldKey.currentState!.openEndDrawer();

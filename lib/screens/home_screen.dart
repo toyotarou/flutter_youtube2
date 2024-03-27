@@ -7,6 +7,7 @@ import '../models/category.dart';
 import '../state/big_category/big_category_notifier.dart';
 import '../state/bunrui/bunrui_notifier.dart';
 import '../state/small_category/small_category_notifier.dart';
+import '../state/video_list/video_list_notifier.dart';
 import 'components/pages/category_list_page.dart';
 import 'components/parts/video_dialog_horizontal_half.dart';
 import 'components/video_bunrui_list_alert.dart';
@@ -39,10 +40,6 @@ class HomeScreen extends ConsumerWidget {
     if (tabs.isEmpty) {
       return Container();
     }
-
-
-
-
 
     return DefaultTabController(
       length: tabs.length,
@@ -143,13 +140,18 @@ class HomeScreen extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 60),
-            const Text('end drawer'),
-            Text((bunruiMap[bunrui] != null) ? bunruiMap[bunrui]!['category1']! : ''),
-            Text((bunruiMap[bunrui] != null) ? bunruiMap[bunrui]!['category2']! : ''),
-            Text(bunrui),
             Row(
               children: [
-                Container(),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text((bunruiMap[bunrui] != null) ? bunruiMap[bunrui]!['category1']! : ''),
+                      Text((bunruiMap[bunrui] != null) ? bunruiMap[bunrui]!['category2']! : ''),
+                      Text(bunrui),
+                    ],
+                  ),
+                ),
                 IconButton(
                     onPressed: () {
                       VideoDialogHorizontalHalf(
@@ -164,42 +166,8 @@ class HomeScreen extends ConsumerWidget {
                     icon: const Icon(Icons.ac_unit)),
               ],
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(),
-                TextButton(
-                  onPressed: () {
-                    _ref.read(bunruiProvider.notifier).setBunrui(bunrui: 'aaaaa');
-                  },
-                  child: const Text('aaaaa'),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(),
-                TextButton(
-                  onPressed: () {
-                    _ref.read(bunruiProvider.notifier).setBunrui(bunrui: 'bbbbb');
-                  },
-                  child: const Text('bbbbb'),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(),
-                TextButton(
-                  onPressed: () {
-                    _ref.read(bunruiProvider.notifier).setBunrui(bunrui: 'ccccc');
-                  },
-                  child: const Text('ccccc'),
-                ),
-              ],
-            ),
+            Divider(color: Colors.white.withOpacity(0.4), thickness: 5),
+            Expanded(child: _displayVideoList()),
           ],
         ),
       ),
@@ -215,5 +183,100 @@ class HomeScreen extends ConsumerWidget {
         tabs.add(TabInfo(bigCategoryList[i].category1, CategoryListPage(category1: bigCategoryList[i].category1, scaffoldKey: scaffoldKey)));
       }
     }
+  }
+
+  ///
+  Widget _displayVideoList() {
+    final list = <Widget>[];
+
+    _ref.watch(videoListProvider.select((value) => value.videoList)).forEach((element) {
+      var getdate = '';
+
+      if (element.getdate != 'null') {
+        final year = element.getdate.substring(0, 4);
+        final month = element.getdate.substring(4, 6);
+        final day = element.getdate.substring(6);
+        getdate = '$year-$month-$day';
+      }
+
+      list.add(Container(
+        margin: const EdgeInsets.only(top: 5, bottom: 10),
+        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 3),
+        decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.white.withOpacity(0.3)))),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: 180,
+                  child: FadeInImage.assetNetwork(
+                    placeholder: 'assets/images/no_image.png',
+                    image: 'https://img.youtube.com/vi/${element.youtubeId}/mqdefault.jpg',
+                    imageErrorBuilder: (c, o, s) => Image.asset('assets/images/no_image.png'),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      (element.special == '1')
+                          ? const Icon(Icons.star, color: Colors.greenAccent)
+                          : Icon(Icons.star, color: Colors.grey.withOpacity(0.3)),
+                      const SizedBox(height: 10),
+                      GestureDetector(
+//                        onTap: () => _ref.watch(appParamProvider.notifier).setYoutubeIdList(youtubeId: data.youtubeId),
+                        child: const Icon(Icons.control_point),
+                      ),
+                      const SizedBox(width: 20),
+                      const SizedBox(height: 10),
+                      GestureDetector(
+//                        onTap: () => _openBrowser(youtubeId: data.youtubeId),
+                        child: const Icon(Icons.link),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 5),
+            Text(element.title),
+            const SizedBox(height: 5),
+            Text.rich(
+              TextSpan(children: [
+                TextSpan(text: element.youtubeId),
+                if (element.playtime != 'null') ...[
+                  const TextSpan(text: ' / '),
+                  TextSpan(text: element.playtime, style: const TextStyle(color: Colors.yellowAccent)),
+                ],
+              ]),
+            ),
+            if (element.channelTitle != 'null') ...[
+              const SizedBox(height: 5),
+              Container(alignment: Alignment.topRight, child: Text(element.channelTitle)),
+            ],
+            if (getdate != '') ...[
+              const SizedBox(height: 5),
+              Container(
+                alignment: Alignment.topRight,
+                child: Text.rich(
+                  TextSpan(children: [
+                    TextSpan(text: getdate),
+                    const TextSpan(text: ' / '),
+                    TextSpan(text: element.pubdate, style: const TextStyle(color: Colors.yellowAccent)),
+                  ]),
+                ),
+              ),
+            ],
+          ],
+        ),
+      ));
+    });
+
+    return SingleChildScrollView(
+      child: DefaultTextStyle(style: const TextStyle(fontSize: 12), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: list)),
+    );
   }
 }
