@@ -8,5 +8,6 @@ part 'video_list_response_state.freezed.dart';
 class VideoListResponseState with _$VideoListResponseState {
   const factory VideoListResponseState({
     @Default([]) List<Video> videoList,
+    @Default([]) List<String> youtubeIdList,
   }) = _VideoListResponseState;
 }

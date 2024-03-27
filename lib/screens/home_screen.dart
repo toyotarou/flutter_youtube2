@@ -189,6 +189,8 @@ class HomeScreen extends ConsumerWidget {
   Widget _displayVideoList() {
     final list = <Widget>[];
 
+    final youtubeIdList = _ref.watch(videoListProvider.select((value) => value.youtubeIdList));
+
     _ref.watch(videoListProvider.select((value) => value.videoList)).forEach((element) {
       var getdate = '';
 
@@ -202,7 +204,10 @@ class HomeScreen extends ConsumerWidget {
       list.add(Container(
         margin: const EdgeInsets.only(top: 5, bottom: 10),
         padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 3),
-        decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.white.withOpacity(0.3)))),
+        decoration: BoxDecoration(
+          border: Border(bottom: BorderSide(color: Colors.white.withOpacity(0.3))),
+          color: (youtubeIdList.contains(element.youtubeId)) ? Colors.greenAccent.withOpacity(0.2) : Colors.transparent,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -227,7 +232,9 @@ class HomeScreen extends ConsumerWidget {
                           : Icon(Icons.star, color: Colors.grey.withOpacity(0.3)),
                       const SizedBox(height: 10),
                       GestureDetector(
-//                        onTap: () => _ref.watch(appParamProvider.notifier).setYoutubeIdList(youtubeId: data.youtubeId),
+                        onTap: () {
+                          _ref.read(videoListProvider.notifier).setYoutubeIdList(youtubeId: element.youtubeId);
+                        },
                         child: const Icon(Icons.control_point),
                       ),
                       const SizedBox(width: 20),

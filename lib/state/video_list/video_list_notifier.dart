@@ -12,7 +12,9 @@ final videoListProvider = StateNotifierProvider.autoDispose<VideoListNotifier, V
 
   final utility = Utility();
 
-  return VideoListNotifier(const VideoListResponseState(), client, utility);
+  final youtubeIdList = List.generate(200, (index) => '');
+
+  return VideoListNotifier(VideoListResponseState(youtubeIdList: youtubeIdList), client, utility);
 });
 
 class VideoListNotifier extends StateNotifier<VideoListResponseState> {
@@ -21,6 +23,7 @@ class VideoListNotifier extends StateNotifier<VideoListResponseState> {
   final HttpClient client;
   final Utility utility;
 
+  ///
   Future<void> getVideoList({required String bunrui}) async {
     await client.post(path: APIPath.getYoutubeList, body: {'bunrui': bunrui}).then((value) {
       final list = <Video>[];
@@ -33,5 +36,18 @@ class VideoListNotifier extends StateNotifier<VideoListResponseState> {
     }).catchError((error, _) {
       utility.showError('予期せぬエラーが発生しました');
     });
+  }
+
+  ///
+  Future<void> setYoutubeIdList({required String youtubeId}) async {
+    final youtubeIdList = [...state.youtubeIdList];
+
+    if (youtubeIdList.contains(youtubeId)) {
+      youtubeIdList.remove(youtubeId);
+    } else {
+      youtubeIdList.add(youtubeId);
+    }
+
+    state = state.copyWith(youtubeIdList: youtubeIdList);
   }
 }

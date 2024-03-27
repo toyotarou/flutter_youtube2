@@ -17,6 +17,7 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$VideoListResponseState {
   List<Video> get videoList => throw _privateConstructorUsedError;
+  List<String> get youtubeIdList => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $VideoListResponseStateCopyWith<VideoListResponseState> get copyWith =>
@@ -29,7 +30,7 @@ abstract class $VideoListResponseStateCopyWith<$Res> {
           $Res Function(VideoListResponseState) then) =
       _$VideoListResponseStateCopyWithImpl<$Res, VideoListResponseState>;
   @useResult
-  $Res call({List<Video> videoList});
+  $Res call({List<Video> videoList, List<String> youtubeIdList});
 }
 
 /// @nodoc
@@ -47,12 +48,17 @@ class _$VideoListResponseStateCopyWithImpl<$Res,
   @override
   $Res call({
     Object? videoList = null,
+    Object? youtubeIdList = null,
   }) {
     return _then(_value.copyWith(
       videoList: null == videoList
           ? _value.videoList
           : videoList // ignore: cast_nullable_to_non_nullable
               as List<Video>,
+      youtubeIdList: null == youtubeIdList
+          ? _value.youtubeIdList
+          : youtubeIdList // ignore: cast_nullable_to_non_nullable
+              as List<String>,
     ) as $Val);
   }
 }
@@ -66,7 +72,7 @@ abstract class _$$VideoListResponseStateImplCopyWith<$Res>
       __$$VideoListResponseStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({List<Video> videoList});
+  $Res call({List<Video> videoList, List<String> youtubeIdList});
 }
 
 /// @nodoc
@@ -83,12 +89,17 @@ class __$$VideoListResponseStateImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? videoList = null,
+    Object? youtubeIdList = null,
   }) {
     return _then(_$VideoListResponseStateImpl(
       videoList: null == videoList
           ? _value._videoList
           : videoList // ignore: cast_nullable_to_non_nullable
               as List<Video>,
+      youtubeIdList: null == youtubeIdList
+          ? _value._youtubeIdList
+          : youtubeIdList // ignore: cast_nullable_to_non_nullable
+              as List<String>,
     ));
   }
 }
@@ -96,8 +107,11 @@ class __$$VideoListResponseStateImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$VideoListResponseStateImpl implements _VideoListResponseState {
-  const _$VideoListResponseStateImpl({final List<Video> videoList = const []})
-      : _videoList = videoList;
+  const _$VideoListResponseStateImpl(
+      {final List<Video> videoList = const [],
+      final List<String> youtubeIdList = const []})
+      : _videoList = videoList,
+        _youtubeIdList = youtubeIdList;
 
   final List<Video> _videoList;
   @override
@@ -108,9 +122,18 @@ class _$VideoListResponseStateImpl implements _VideoListResponseState {
     return EqualUnmodifiableListView(_videoList);
   }
 
+  final List<String> _youtubeIdList;
+  @override
+  @JsonKey()
+  List<String> get youtubeIdList {
+    if (_youtubeIdList is EqualUnmodifiableListView) return _youtubeIdList;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_youtubeIdList);
+  }
+
   @override
   String toString() {
-    return 'VideoListResponseState(videoList: $videoList)';
+    return 'VideoListResponseState(videoList: $videoList, youtubeIdList: $youtubeIdList)';
   }
 
   @override
@@ -119,12 +142,16 @@ class _$VideoListResponseStateImpl implements _VideoListResponseState {
         (other.runtimeType == runtimeType &&
             other is _$VideoListResponseStateImpl &&
             const DeepCollectionEquality()
-                .equals(other._videoList, _videoList));
+                .equals(other._videoList, _videoList) &&
+            const DeepCollectionEquality()
+                .equals(other._youtubeIdList, _youtubeIdList));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, const DeepCollectionEquality().hash(_videoList));
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(_videoList),
+      const DeepCollectionEquality().hash(_youtubeIdList));
 
   @JsonKey(ignore: true)
   @override
@@ -135,11 +162,14 @@ class _$VideoListResponseStateImpl implements _VideoListResponseState {
 }
 
 abstract class _VideoListResponseState implements VideoListResponseState {
-  const factory _VideoListResponseState({final List<Video> videoList}) =
-      _$VideoListResponseStateImpl;
+  const factory _VideoListResponseState(
+      {final List<Video> videoList,
+      final List<String> youtubeIdList}) = _$VideoListResponseStateImpl;
 
   @override
   List<Video> get videoList;
+  @override
+  List<String> get youtubeIdList;
   @override
   @JsonKey(ignore: true)
   _$$VideoListResponseStateImplCopyWith<_$VideoListResponseStateImpl>
