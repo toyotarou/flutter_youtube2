@@ -57,6 +57,8 @@ class VideoBunruiListAlert extends ConsumerWidget {
 
           _ref.read(videoListProvider.notifier).getVideoList(bunrui: element.bunrui);
 
+          _ref.read(videoListProvider.notifier).clearYoutubeIdList();
+
           if (scaffoldKey.currentState != null) {
             scaffoldKey.currentState!.openEndDrawer();
           }

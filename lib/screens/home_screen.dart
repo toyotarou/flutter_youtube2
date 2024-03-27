@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../models/category.dart';
 import '../state/big_category/big_category_notifier.dart';
@@ -166,6 +167,97 @@ class HomeScreen extends ConsumerWidget {
                     icon: const Icon(Icons.ac_unit)),
               ],
             ),
+            const SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(),
+                Row(
+                  children: [
+                    GestureDetector(
+                      onTap: () async {
+                        await _ref.read(videoListProvider.notifier).manipulateVideoList(bunrui: 'special');
+
+                        await onTapGood3(() async {
+                          Navigator.pop(_context);
+
+                          await VideoDialogHorizontalHalf(
+                            context: _context,
+                            widget: VideoBunruiListAlert(
+                              scaffoldKey: scaffoldKey,
+                              category2: (bunruiMap[bunrui] != null) ? bunruiMap[bunrui]!['category2']! : '',
+                              categoryList: smallCategoryList,
+                            ),
+                          );
+                        });
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+                        decoration: BoxDecoration(
+                          color: Colors.blueAccent.withOpacity(0.3),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: const Text('選出', style: TextStyle(fontSize: 12)),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    GestureDetector(
+                      onTap: () async {
+                        await _ref.read(videoListProvider.notifier).manipulateVideoList(bunrui: 'erase');
+
+                        await onTapGood3(() async {
+                          Navigator.pop(_context);
+
+                          await VideoDialogHorizontalHalf(
+                            context: _context,
+                            widget: VideoBunruiListAlert(
+                              scaffoldKey: scaffoldKey,
+                              category2: (bunruiMap[bunrui] != null) ? bunruiMap[bunrui]!['category2']! : '',
+                              categoryList: smallCategoryList,
+                            ),
+                          );
+                        });
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+                        decoration: BoxDecoration(
+                          color: Colors.blueAccent.withOpacity(0.3),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: const Text('分類消去', style: TextStyle(fontSize: 12)),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    GestureDetector(
+                      onTap: () async {
+                        await _ref.read(videoListProvider.notifier).manipulateVideoList(bunrui: 'delete');
+
+                        await onTapGood3(() async {
+                          Navigator.pop(_context);
+
+                          await VideoDialogHorizontalHalf(
+                            context: _context,
+                            widget: VideoBunruiListAlert(
+                              scaffoldKey: scaffoldKey,
+                              category2: (bunruiMap[bunrui] != null) ? bunruiMap[bunrui]!['category2']! : '',
+                              categoryList: smallCategoryList,
+                            ),
+                          );
+                        });
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+                        decoration: BoxDecoration(
+                          color: Colors.blueAccent.withOpacity(0.3),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: const Text('削除', style: TextStyle(fontSize: 12)),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
             Divider(color: Colors.white.withOpacity(0.4), thickness: 5),
             Expanded(child: _displayVideoList()),
           ],
@@ -240,7 +332,7 @@ class HomeScreen extends ConsumerWidget {
                       const SizedBox(width: 20),
                       const SizedBox(height: 10),
                       GestureDetector(
-//                        onTap: () => _openBrowser(youtubeId: data.youtubeId),
+                        onTap: () => _openBrowser(youtubeId: element.youtubeId),
                         child: const Icon(Icons.link),
                       ),
                     ],
@@ -285,5 +377,21 @@ class HomeScreen extends ConsumerWidget {
     return SingleChildScrollView(
       child: DefaultTextStyle(style: const TextStyle(fontSize: 12), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: list)),
     );
+  }
+
+  ///
+  Future<void> onTapGood3(void Function() onSuccess) async {
+    await Future.delayed(const Duration(milliseconds: 10));
+    onSuccess();
+  }
+
+  ///
+  Future<void> _openBrowser({required String youtubeId}) async {
+    await _ref.read(videoListProvider.notifier).updateVideoPlayedAt(youtubeId: youtubeId);
+
+    final url = Uri.parse('https://youtu.be/$youtubeId');
+    if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+      throw Exception('Could not launch $url');
+    }
   }
 }
