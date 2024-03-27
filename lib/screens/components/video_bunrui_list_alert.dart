@@ -36,17 +36,19 @@ class VideoBunruiListAlert extends ConsumerWidget {
           children: [
             const SizedBox(height: 20),
             Container(width: context.screenSize.width),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [Text('Credit Input')],
-                ),
-                Container(),
-              ],
-            ),
-            Divider(color: Colors.white.withOpacity(0.4), thickness: 5),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //   children: [
+            //     const Column(
+            //       crossAxisAlignment: CrossAxisAlignment.start,
+            //       children: [Text('Credit Input')],
+            //     ),
+            //     Container(),
+            //   ],
+            // ),
+            // Divider(color: Colors.white.withOpacity(0.4), thickness: 5),
+            //
+
             Expanded(child: _displayBunruiList()),
           ],
         ),
@@ -59,25 +61,25 @@ class VideoBunruiListAlert extends ConsumerWidget {
     final list = <Widget>[];
 
     categoryList.where((element) => element.category2 == category2).forEach((element) {
-      list.add(Container(
-        padding: const EdgeInsets.all(10),
-        decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.white.withOpacity(0.3)))),
-        child: Row(
-          children: [
-            GestureDetector(
-              onTap: () {
-                _ref.read(bunruiProvider.notifier).setBunrui(bunrui: element.bunrui);
+      list.add(GestureDetector(
+        onTap: () {
+          _ref.read(bunruiProvider.notifier).setBunrui(bunrui: element.bunrui);
 
-                if (scaffoldKey.currentState != null) {
-                  scaffoldKey.currentState!.openEndDrawer();
-                }
-              },
-              child: const Icon(Icons.ac_unit),
-            ),
-            const SizedBox(width: 20),
-            Text(element.bunrui),
-          ],
-        ),
+          if (scaffoldKey.currentState != null) {
+            scaffoldKey.currentState!.openEndDrawer();
+          }
+        },
+        child: Container(
+            margin: const EdgeInsets.symmetric(vertical: 5),
+            padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 3),
+            decoration: BoxDecoration(border: Border.all(color: Colors.white.withOpacity(0.3))),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(element.bunrui),
+                Container(),
+              ],
+            )),
       ));
     });
 
