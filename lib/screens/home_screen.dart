@@ -1,6 +1,8 @@
 // ignore_for_file: must_be_immutable
 
 import 'package:flutter/material.dart';
+import 'package:flutter_youtube2/screens/components/bunrui_blank_video_alert.dart';
+import 'package:flutter_youtube2/screens/components/parts/video_dialog.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -51,9 +53,47 @@ class HomeScreen extends ConsumerWidget {
         appBar: AppBar(
           elevation: 0,
           title: const Text('Video Category'),
-          leading: const Icon(Icons.check_box_outline_blank, color: Colors.transparent),
-          actions: const [
-            Icon(Icons.check_box_outline_blank, color: Colors.transparent),
+          centerTitle: true,
+          leading: GestureDetector(
+            onTap: () {
+              ref.read(videoListProvider.notifier).getBlankBunruiVideo();
+
+              VideoDialog(context: context, widget: BunruiBlankVideoAlert());
+            },
+            child: const Icon(Icons.input),
+          ),
+          actions: <Widget>[
+            Container(
+              margin: const EdgeInsets.only(top: 10),
+              child: Row(
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(builder: (context) => CalendarGetScreen()),
+                      // );
+                    },
+                    child: const SizedBox(
+                      width: 60,
+                      child: Column(children: [Icon(Icons.calendar_today_sharp), Text('Get')]),
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(builder: (context) => CalendarPublishScreen()),
+                      // );
+                    },
+                    child: const SizedBox(
+                      width: 60,
+                      child: Column(children: [Icon(Icons.calendar_today_sharp), Text('Publish')]),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ],
           flexibleSpace: Stack(
             children: [

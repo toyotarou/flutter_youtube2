@@ -40,15 +40,15 @@ class VideoListNotifier extends StateNotifier<VideoListResponseState> {
 
   ///
   Future<void> setYoutubeIdList({required String youtubeId}) async {
-    final youtubeIdList = [...state.youtubeIdList];
+    final list = [...state.youtubeIdList];
 
-    if (youtubeIdList.contains(youtubeId)) {
-      youtubeIdList.remove(youtubeId);
+    if (list.contains(youtubeId)) {
+      list.remove(youtubeId);
     } else {
-      youtubeIdList.add(youtubeId);
+      list.add(youtubeId);
     }
 
-    state = state.copyWith(youtubeIdList: youtubeIdList);
+    state = state.copyWith(youtubeIdList: list);
   }
 
   ///
@@ -77,6 +77,21 @@ class VideoListNotifier extends StateNotifier<VideoListResponseState> {
     uploadData['youtube_id'] = youtubeId;
 
     await client.post(path: APIPath.updateVideoPlayedAt, body: uploadData).catchError((error, _) {
+      utility.showError('予期せぬエラーが発生しました');
+    });
+  }
+
+  ///
+  Future<void> getBlankBunruiVideo() async {
+    await client.post(path: APIPath.getBlankBunruiVideo).then((value) {
+      final list = <Video>[];
+
+      for (var i = 0; i < value['data'].length.toString().toInt(); i++) {
+        list.add(Video.fromJson(value['data'][i] as Map<String, dynamic>));
+      }
+
+      state = state.copyWith(videoList: list);
+    }).catchError((error, _) {
       utility.showError('予期せぬエラーが発生しました');
     });
   }
