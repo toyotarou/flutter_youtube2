@@ -6,7 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../../extensions/extensions.dart';
 import '../../../state/small_category/small_category_notifier.dart';
 import '../../../utility/utility.dart';
-import '../parts/video_dialog_horizontal_half.dart';
+import '../parts/video_dialog.dart';
 import '../video_bunrui_list_alert.dart';
 
 class CategoryListPage extends ConsumerWidget {
@@ -94,9 +94,11 @@ class CategoryListPage extends ConsumerWidget {
                   GestureDetector(
                     child: const Icon(Icons.ac_unit),
                     onTap: () {
-                      VideoDialogHorizontalHalf(
+                      VideoDialog(
                         context: _context,
                         widget: VideoBunruiListAlert(scaffoldKey: scaffoldKey, category2: element.category2, categoryList: smallCategoryList),
+                        paddingRight: _context.screenSize.width * 0.5,
+                        paddingTop: 100,
                       );
                     },
                   ),

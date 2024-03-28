@@ -1,18 +1,18 @@
 // ignore_for_file: must_be_immutable
 
 import 'package:flutter/material.dart';
-import 'package:flutter_youtube2/screens/components/bunrui_blank_video_alert.dart';
-import 'package:flutter_youtube2/screens/components/parts/video_dialog.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../extensions/extensions.dart';
 import '../models/category.dart';
 import '../state/big_category/big_category_notifier.dart';
 import '../state/bunrui/bunrui_notifier.dart';
 import '../state/small_category/small_category_notifier.dart';
 import '../state/video_list/video_list_notifier.dart';
+import 'components/bunrui_blank_video_alert.dart';
 import 'components/pages/category_list_page.dart';
-import 'components/parts/video_dialog_horizontal_half.dart';
+import 'components/parts/video_dialog.dart';
 import 'components/video_bunrui_list_alert.dart';
 
 class TabInfo {
@@ -195,13 +195,15 @@ class HomeScreen extends ConsumerWidget {
                 ),
                 IconButton(
                     onPressed: () {
-                      VideoDialogHorizontalHalf(
+                      VideoDialog(
                         context: _context,
                         widget: VideoBunruiListAlert(
                           scaffoldKey: scaffoldKey,
                           category2: (bunruiMap[bunrui] != null) ? bunruiMap[bunrui]!['category2']! : '',
                           categoryList: smallCategoryList,
                         ),
+                        paddingRight: _context.screenSize.width * 0.5,
+                        paddingTop: 100,
                       );
                     },
                     icon: const Icon(Icons.ac_unit)),
@@ -221,13 +223,15 @@ class HomeScreen extends ConsumerWidget {
                         await onTapGood3(() async {
                           Navigator.pop(_context);
 
-                          await VideoDialogHorizontalHalf(
+                          await VideoDialog(
                             context: _context,
                             widget: VideoBunruiListAlert(
                               scaffoldKey: scaffoldKey,
                               category2: (bunruiMap[bunrui] != null) ? bunruiMap[bunrui]!['category2']! : '',
                               categoryList: smallCategoryList,
                             ),
+                            paddingRight: _context.screenSize.width * 0.5,
+                            paddingTop: 100,
                           );
                         });
                       },
@@ -248,13 +252,15 @@ class HomeScreen extends ConsumerWidget {
                         await onTapGood3(() async {
                           Navigator.pop(_context);
 
-                          await VideoDialogHorizontalHalf(
+                          await VideoDialog(
                             context: _context,
                             widget: VideoBunruiListAlert(
                               scaffoldKey: scaffoldKey,
                               category2: (bunruiMap[bunrui] != null) ? bunruiMap[bunrui]!['category2']! : '',
                               categoryList: smallCategoryList,
                             ),
+                            paddingRight: _context.screenSize.width * 0.5,
+                            paddingTop: 100,
                           );
                         });
                       },
@@ -275,13 +281,15 @@ class HomeScreen extends ConsumerWidget {
                         await onTapGood3(() async {
                           Navigator.pop(_context);
 
-                          await VideoDialogHorizontalHalf(
+                          await VideoDialog(
                             context: _context,
                             widget: VideoBunruiListAlert(
                               scaffoldKey: scaffoldKey,
                               category2: (bunruiMap[bunrui] != null) ? bunruiMap[bunrui]!['category2']! : '',
                               categoryList: smallCategoryList,
                             ),
+                            paddingRight: _context.screenSize.width * 0.5,
+                            paddingTop: 100,
                           );
                         });
                       },
