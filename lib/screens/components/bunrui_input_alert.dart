@@ -96,6 +96,7 @@ class BunruiInputAlert extends ConsumerWidget {
                             widget: BunruiListAlert(tecs: tecs),
                             paddingLeft: context.screenSize.width * 0.3,
                             paddingTop: 100,
+                            clearBarrierColor: true,
                           ),
                         );
                       },

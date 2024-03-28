@@ -99,6 +99,7 @@ class CategoryListPage extends ConsumerWidget {
                         widget: VideoBunruiListAlert(scaffoldKey: scaffoldKey, category2: element.category2, categoryList: smallCategoryList),
                         paddingRight: _context.screenSize.width * 0.5,
                         paddingTop: 100,
+                        clearBarrierColor: true,
                       );
                     },
                   ),
