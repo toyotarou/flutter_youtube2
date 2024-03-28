@@ -317,6 +317,8 @@ class HomeScreen extends ConsumerWidget {
 
   ///
   void makeBigCategoryTab() {
+    tabs.clear();
+
     final bigCategoryList = _ref.watch(bigCategoryProvider.select((value) => value.bigCategoryList));
 
     for (var i = 0; i < bigCategoryList.length; i++) {
