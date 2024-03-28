@@ -1,18 +1,23 @@
-// ignore_for_file: must_be_immutable, cascade_invocations, use_build_context_synchronously
+// ignore_for_file: must_be_immutable
 
 import 'package:flutter/material.dart';
+import 'package:flutter_youtube2/state/bunrui/bunrui_notifier.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../extensions/extensions.dart';
 import '../../models/video.dart';
-import '../../utility/utility.dart';
+import '../../state/big_category/big_category_notifier.dart';
+import '../../state/category_setting/category_setting_notifier.dart';
+import '../../state/small_category/small_category_notifier.dart';
+import '../../state/video_list/video_list_notifier.dart';
+import '../../utility/function.dart';
+import 'bunrui_list_alert.dart';
+import 'parts/video_dialog.dart';
 
 class BunruiInputAlert extends ConsumerWidget {
   BunruiInputAlert({super.key, required this.video});
 
   final Video video;
-
-  final Utility _utility = Utility();
 
   List<String> category1List = [];
   List<String> category2List = [];
@@ -30,10 +35,7 @@ class BunruiInputAlert extends ConsumerWidget {
 
     makeCategoryList();
 
-    // final settingCategoryState = ref.watch(settingCategoryProvider);
-    //
-    //
-    //
+    final categorySettingState = ref.watch(categorySettingProvider);
 
     return AlertDialog(
       titlePadding: EdgeInsets.zero,
@@ -52,37 +54,22 @@ class BunruiInputAlert extends ConsumerWidget {
               children: [
                 const SizedBox(height: 20),
                 Container(width: context.screenSize.width),
-
                 const SizedBox(height: 20),
-
-                // VideoListItem(
-                //   data: video,
-                //   listAddDisplay: false,
-                //   linkDisplay: false,
-                // ),
-                //
-                //
-
+                SizedBox(
+                  width: 180,
+                  child: FadeInImage.assetNetwork(
+                    placeholder: 'assets/images/no_image.png',
+                    image: 'https://img.youtube.com/vi/${video.youtubeId}/mqdefault.jpg',
+                    imageErrorBuilder: (c, o, s) => Image.asset('assets/images/no_image.png'),
+                  ),
+                ),
                 Divider(color: Colors.white.withOpacity(0.3), thickness: 2),
-
                 setCategory1Block(),
-
                 const SizedBox(height: 20),
-
-                Divider(
-                  color: Colors.white.withOpacity(0.3),
-                  thickness: 2,
-                ),
-
+                Divider(color: Colors.white.withOpacity(0.3), thickness: 2),
                 setCategory2Block(),
-
                 const SizedBox(height: 20),
-
-                Divider(
-                  color: Colors.white.withOpacity(0.3),
-                  thickness: 2,
-                ),
-
+                Divider(color: Colors.white.withOpacity(0.3), thickness: 2),
                 SizedBox(
                   width: double.infinity,
                   child: TextField(
@@ -90,62 +77,57 @@ class BunruiInputAlert extends ConsumerWidget {
                     decoration: const InputDecoration(
                       filled: true,
                       border: OutlineInputBorder(),
-                      contentPadding: EdgeInsets.symmetric(
-                        vertical: 4,
-                        horizontal: 4,
-                      ),
+                      contentPadding: EdgeInsets.symmetric(vertical: 4, horizontal: 4),
                     ),
                     style: const TextStyle(fontSize: 12),
                   ),
                 ),
-
                 const SizedBox(height: 20),
-
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     IconButton(
-                      onPressed: () {
-                        // BunruiDialog(
-                        //   context: context,
-                        //   widget: BunruiListAlert(tecs: tecs),
-                        // );
-                        //
-                        //
-                        //
-                        //
+                      onPressed: () async {
+                        await _ref.read(bunruiProvider.notifier).getBunruiMap();
+
+                        await onTapGood3(
+                          () => VideoDialog(
+                            context: context,
+                            widget: BunruiListAlert(tecs: tecs),
+                            paddingLeft: context.screenSize.width * 0.3,
+                            paddingTop: 100,
+                          ),
+                        );
                       },
                       icon: const Icon(Icons.list),
                     ),
                     IconButton(
                       onPressed: () async {
-                        // final cate1 = (settingCategoryState.selectedCategory1 != '')
-                        //     ? settingCategoryState.selectedCategory1
-                        //     : settingCategoryState.inputedCategory1;
-                        //
-                        // final cate2 = (settingCategoryState.selectedCategory2 != '')
-                        //     ? settingCategoryState.selectedCategory2
-                        //     : settingCategoryState.inputedCategory2;
-                        //
-                        // if (cate1 == '' || cate2 == '') {
-                        //   return;
-                        // }
-                        //
-                        // /// notifier カテゴリー、分類をセット
-                        // await ref
-                        //     .watch(categoryInputProvider.notifier)
-                        //     .inputBunrui(youtubeId: video.youtubeId, cate1: cate1, cate2: cate2, bunrui: tecs[2].text);
-                        //
-                        // /// notifier 未分類の動画を呼び出す
-                        // await ref.watch(blankBunruiVideoProvider.notifier).getBlankBunruiVideo();
-                        //
-                        // Navigator.pop(context);
+                        final cate1 = (categorySettingState.selectedCategory1 != '')
+                            ? categorySettingState.selectedCategory1
+                            : categorySettingState.inputedCategory1;
+
+                        final cate2 = (categorySettingState.selectedCategory2 != '')
+                            ? categorySettingState.selectedCategory2
+                            : categorySettingState.inputedCategory2;
+
+                        if (cate1 == '' || cate2 == '') {
+                          return;
+                        }
+
+                        await ref
+                            .watch(categorySettingProvider.notifier)
+                            .inputBunruiCategory(youtubeId: video.youtubeId, cate1: cate1, cate2: cate2, bunrui: tecs[2].text);
+
+                        /// notifier 未分類の動画を呼び出す
+                        await ref.watch(videoListProvider.notifier).getBlankBunruiVideo();
+
+                        await onTapGood3(() async => Navigator.pop(context));
                       },
                       icon: const Icon(Icons.input),
                     ),
                   ],
                 ),
-
                 const SizedBox(height: 40),
               ],
             ),
@@ -157,66 +139,36 @@ class BunruiInputAlert extends ConsumerWidget {
 
   ///
   Widget setCategory1Block() {
-    // final settingCategoryState = _ref.watch(settingCategoryProvider);
-    //
-    //
-    //
-    //
+    final categorySettingState = _ref.watch(categorySettingProvider);
 
     return Container(
       padding: const EdgeInsets.only(left: 10),
-      decoration: BoxDecoration(
-        border: Border(
-          left: BorderSide(
-            color: Colors.blueAccent.withOpacity(0.5),
-            width: 5,
-          ),
-        ),
-      ),
+      decoration: BoxDecoration(border: Border(left: BorderSide(color: Colors.blueAccent.withOpacity(0.5), width: 5))),
       child: Column(
         children: [
-          // Container(
-          //   width: double.infinity,
-          //   decoration: BoxDecoration(
-          //     color: Colors.blueAccent.withOpacity(0.2),
-          //   ),
-          //   child: DropdownButton(
-          //     value: settingCategoryState.selectedCategory1,
-          //     icon: const Visibility(
-          //       visible: false,
-          //       child: Icon(Icons.arrow_drop_down),
-          //     ),
-          //     items: category1List.map((val) {
-          //       return DropdownMenuItem(
-          //         value: val,
-          //         child: Text(val),
-          //       );
-          //     }).toList(),
-          //     onChanged: (value) {
-          //       /// notifier 選択されたcategory1をセット
-          //       _ref.watch(settingCategoryProvider.notifier).setSelectedCategory1(value: value!);
-          //     },
-          //   ),
-          // ),
-          // SizedBox(
-          //   width: double.infinity,
-          //   child: TextField(
-          //     controller: tecs[0],
-          //     decoration: const InputDecoration(
-          //       filled: true,
-          //       border: OutlineInputBorder(),
-          //       contentPadding: EdgeInsets.symmetric(
-          //         vertical: 4,
-          //         horizontal: 4,
-          //       ),
-          //     ),
-          //     style: const TextStyle(fontSize: 12),
-          //     onChanged: (value) {
-          //       /// notifier 入力されたcategory1をセット
-          //       _ref.watch(settingCategoryProvider.notifier).setInputedCategory1(value: value);
-          //     },
-          //   ),
-          // ),
+          Container(
+            width: double.infinity,
+            decoration: BoxDecoration(color: Colors.blueAccent.withOpacity(0.2)),
+            child: DropdownButton(
+              value: categorySettingState.selectedCategory1,
+              icon: const Visibility(visible: false, child: Icon(Icons.arrow_drop_down)),
+              items: category1List.map((val) => DropdownMenuItem(value: val, child: Text(val))).toList(),
+              onChanged: (value) => _ref.watch(categorySettingProvider.notifier).setSelectedCategory1(value: value!),
+            ),
+          ),
+          SizedBox(
+            width: double.infinity,
+            child: TextField(
+              controller: tecs[0],
+              decoration: const InputDecoration(
+                filled: true,
+                border: OutlineInputBorder(),
+                contentPadding: EdgeInsets.symmetric(vertical: 4, horizontal: 4),
+              ),
+              style: const TextStyle(fontSize: 12),
+              onChanged: (value) => _ref.watch(categorySettingProvider.notifier).setInputedCategory1(value: value),
+            ),
+          ),
         ],
       ),
     );
@@ -224,10 +176,7 @@ class BunruiInputAlert extends ConsumerWidget {
 
   ///
   Widget setCategory2Block() {
-    // final settingCategoryState = _ref.watch(settingCategoryProvider);
-    //
-    //
-    //
+    final categorySettingState = _ref.watch(categorySettingProvider);
 
     return Container(
       padding: const EdgeInsets.only(left: 10),
@@ -241,48 +190,29 @@ class BunruiInputAlert extends ConsumerWidget {
       ),
       child: Column(
         children: [
-          // Container(
-          //   width: double.infinity,
-          //   decoration: BoxDecoration(
-          //     color: Colors.blueAccent.withOpacity(0.2),
-          //   ),
-          //   child: DropdownButton(
-          //     value: settingCategoryState.selectedCategory2,
-          //     icon: const Visibility(
-          //       visible: false,
-          //       child: Icon(Icons.arrow_drop_down),
-          //     ),
-          //     items: category2List.map((val) {
-          //       return DropdownMenuItem(
-          //         value: val,
-          //         child: Text(val),
-          //       );
-          //     }).toList(),
-          //     onChanged: (value) {
-          //       /// notifier 選択されたcategory2をセット
-          //       _ref.watch(settingCategoryProvider.notifier).setSelectedCategory2(value: value!);
-          //     },
-          //   ),
-          // ),
-          // SizedBox(
-          //   width: double.infinity,
-          //   child: TextField(
-          //     controller: tecs[1],
-          //     decoration: const InputDecoration(
-          //       filled: true,
-          //       border: OutlineInputBorder(),
-          //       contentPadding: EdgeInsets.symmetric(
-          //         vertical: 4,
-          //         horizontal: 4,
-          //       ),
-          //     ),
-          //     style: const TextStyle(fontSize: 12),
-          //     onChanged: (value) {
-          //       /// notifier 入力されたcategory2をセット
-          //       _ref.watch(settingCategoryProvider.notifier).setInputedCategory2(value: value);
-          //     },
-          //   ),
-          // ),
+          Container(
+            width: double.infinity,
+            decoration: BoxDecoration(color: Colors.blueAccent.withOpacity(0.2)),
+            child: DropdownButton(
+              value: categorySettingState.selectedCategory2,
+              icon: const Visibility(visible: false, child: Icon(Icons.arrow_drop_down)),
+              items: category2List.map((val) => DropdownMenuItem(value: val, child: Text(val))).toList(),
+              onChanged: (value) => _ref.watch(categorySettingProvider.notifier).setSelectedCategory2(value: value!),
+            ),
+          ),
+          SizedBox(
+            width: double.infinity,
+            child: TextField(
+              controller: tecs[1],
+              decoration: const InputDecoration(
+                filled: true,
+                border: OutlineInputBorder(),
+                contentPadding: EdgeInsets.symmetric(vertical: 4, horizontal: 4),
+              ),
+              style: const TextStyle(fontSize: 12),
+              onChanged: (value) => _ref.watch(categorySettingProvider.notifier).setInputedCategory2(value: value),
+            ),
+          ),
         ],
       ),
     );
@@ -297,31 +227,29 @@ class BunruiInputAlert extends ConsumerWidget {
 
   ///
   void makeCategoryList() {
-    // category1List = [''];
-    // category2List = [''];
-    //
-    // final bigCategoryState = _ref.watch(bigCategoryProvider);
-    //
-    // final keepCategory2 = <String>[];
-    //
-    // bigCategoryState.forEach((element) {
-    //   //---// category1
-    //   if (element.category1 != '') {
-    //     category1List.add(element.category1);
-    //   }
-    //
-    //   //---// category2
-    //   final smallCategoryState = _ref.watch(smallCategoryProvider(element.category1));
-    //
-    //   smallCategoryState.forEach((element2) {
-    //     if (!keepCategory2.contains(element2.category2)) {
-    //       if (element2.category2 != '') {
-    //         category2List.add(element2.category2);
-    //       }
-    //     }
-    //
-    //     keepCategory2.add(element2.category2);
-    //   });
-    // });
+    category1List = [''];
+    category2List = [''];
+
+    final bigCategoryList = _ref.watch(bigCategoryProvider.select((value) => value.bigCategoryList));
+
+    final keepCategory2 = <String>[];
+
+    bigCategoryList.forEach((element) {
+      //---// category1
+      if (element.category1 != '') {
+        category1List.add(element.category1);
+      }
+
+      //---// category2
+      _ref.watch(smallCategoryProvider(element.category1).select((value) => value.smallCategoryList)).forEach((element2) {
+        if (!keepCategory2.contains(element2.category2)) {
+          if (element2.category2 != '') {
+            category2List.add(element2.category2);
+          }
+        }
+
+        keepCategory2.add(element2.category2);
+      });
+    });
   }
 }

@@ -1,6 +1,8 @@
 // ignore_for_file: must_be_immutable
 
 import 'package:flutter/material.dart';
+import 'package:flutter_youtube2/screens/components/bunrui_input_alert.dart';
+import 'package:flutter_youtube2/screens/components/parts/video_dialog.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../extensions/extensions.dart';
@@ -9,11 +11,13 @@ import '../../state/video_list/video_list_notifier.dart';
 class BunruiBlankVideoAlert extends ConsumerWidget {
   BunruiBlankVideoAlert({super.key});
 
+  late BuildContext _context;
   late WidgetRef _ref;
 
   ///
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    _context = context;
     _ref = ref;
 
     return AlertDialog(
@@ -59,10 +63,7 @@ class BunruiBlankVideoAlert extends ConsumerWidget {
                   Container(),
                   GestureDetector(
                     onTap: () {
-                      // BunruiDialog(
-                      //   context: _context,
-                      //   widget: BunruiInputAlert(video: element),
-                      // );
+                      VideoDialog(context: _context, widget: BunruiInputAlert(video: element));
                     },
                     child: const Icon(Icons.input),
                   ),

@@ -10,6 +10,7 @@ import '../state/big_category/big_category_notifier.dart';
 import '../state/bunrui/bunrui_notifier.dart';
 import '../state/small_category/small_category_notifier.dart';
 import '../state/video_list/video_list_notifier.dart';
+import '../utility/function.dart';
 import 'components/bunrui_blank_video_alert.dart';
 import 'components/pages/category_list_page.dart';
 import 'components/parts/video_dialog.dart';
@@ -425,12 +426,6 @@ class HomeScreen extends ConsumerWidget {
     return SingleChildScrollView(
       child: DefaultTextStyle(style: const TextStyle(fontSize: 12), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: list)),
     );
-  }
-
-  ///
-  Future<void> onTapGood3(void Function() onSuccess) async {
-    await Future.delayed(const Duration(milliseconds: 10));
-    onSuccess();
   }
 
   ///
