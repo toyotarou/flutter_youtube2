@@ -1,6 +1,7 @@
 // ignore_for_file: must_be_immutable
 
 import 'package:flutter/material.dart';
+import 'package:flutter_youtube2/screens/components/calendar_alert.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -70,10 +71,10 @@ class HomeScreen extends ConsumerWidget {
                 children: [
                   GestureDetector(
                     onTap: () {
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(builder: (context) => CalendarGetScreen()),
-                      // );
+                      VideoDialog(
+                        context: context,
+                        widget: CalendarAlert(type: 'get'),
+                      );
                     },
                     child: const SizedBox(
                       width: 60,
@@ -82,10 +83,10 @@ class HomeScreen extends ConsumerWidget {
                   ),
                   GestureDetector(
                     onTap: () {
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(builder: (context) => CalendarPublishScreen()),
-                      // );
+                      VideoDialog(
+                        context: context,
+                        widget: CalendarAlert(type: 'publish'),
+                      );
                     },
                     child: const SizedBox(
                       width: 60,

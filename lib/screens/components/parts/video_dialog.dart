@@ -13,7 +13,7 @@ Future<void> VideoDialog({
 }) {
   return showDialog(
     context: context,
-    barrierColor: (clearBarrierColor)? Colors.transparent:Colors.black.withOpacity(0.1),
+    barrierColor: clearBarrierColor? Colors.transparent:Colors.black.withOpacity(0.1),
     builder: (_) {
       return Container(
         padding: EdgeInsets.only(top: paddingTop, right: paddingRight, bottom: paddingBottom, left: paddingLeft),

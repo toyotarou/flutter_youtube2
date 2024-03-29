@@ -7,7 +7,8 @@ enum APIPath {
   getYoutubeList,
   getSpecialVideo,
   getDeletedVideo,
-  getBlankBunruiVideo
+  getBlankBunruiVideo,
+  getholiday
 }
 
 extension APIPathExtension on APIPath {
@@ -33,6 +34,8 @@ extension APIPathExtension on APIPath {
         return 'getDeletedVideo';
       case APIPath.getBlankBunruiVideo:
         return 'getBlankBunruiVideo';
+      case APIPath.getholiday:
+        return 'getholiday';
     }
   }
 }
