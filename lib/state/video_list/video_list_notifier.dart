@@ -95,4 +95,19 @@ class VideoListNotifier extends StateNotifier<VideoListResponseState> {
       utility.showError('予期せぬエラーが発生しました');
     });
   }
+
+  ///
+  Future<void> getAllVideoList() async {
+    await client.post(path: APIPath.getYoutubeList).then((value) {
+      final list = <Video>[];
+
+      for (var i = 0; i < value['data'].length.toString().toInt(); i++) {
+        list.add(Video.fromJson(value['data'][i] as Map<String, dynamic>));
+      }
+
+      state = state.copyWith(videoList: list);
+    }).catchError((error, _) {
+      utility.showError('予期せぬエラーが発生しました');
+    });
+  }
 }

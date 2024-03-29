@@ -4,9 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../extensions/extensions.dart';
+import '../../models/video.dart';
 import '../../state/calendars/calendars_notifier.dart';
 import '../../state/holidays/holiday_notifier.dart';
+import '../../state/video_list/video_list_notifier.dart';
 import '../../utility/utility.dart';
+import 'get_publish_video_list_alert.dart';
+import 'parts/video_dialog.dart';
 
 class CalendarAlert extends ConsumerWidget {
   CalendarAlert({super.key, required this.type});
@@ -19,6 +23,8 @@ class CalendarAlert extends ConsumerWidget {
 
   final Utility _utility = Utility();
 
+  Map<String, List<Video>> calendarMap = {};
+
   late BuildContext _context;
   late WidgetRef _ref;
 
@@ -28,6 +34,8 @@ class CalendarAlert extends ConsumerWidget {
     _context = context;
     _ref = ref;
 
+    makeCalendarMap();
+
     final calendarState = ref.watch(calendarProvider);
 
     return AlertDialog(
@@ -36,13 +44,15 @@ class CalendarAlert extends ConsumerWidget {
       content: SizedBox(
         width: double.infinity,
         height: MediaQuery.of(context).size.height - 50,
-        child: SingleChildScrollView(
-          child: DefaultTextStyle(
-            style: const TextStyle(fontSize: 12),
-            child: Column(
-              children: [
-                Container(width: context.screenSize.width),
-                Row(
+        child: DefaultTextStyle(
+          style: const TextStyle(fontSize: 12),
+          child: Column(
+            children: [
+              Container(width: context.screenSize.width),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                decoration: BoxDecoration(color: Colors.blueGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
+                child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Row(
@@ -68,12 +78,13 @@ class CalendarAlert extends ConsumerWidget {
                     Text(type),
                   ],
                 ),
-                ConstrainedBox(
-                  constraints: BoxConstraints(minHeight: context.screenSize.height * 0.45),
-                  child: _getCalendar(),
-                ),
-              ],
-            ),
+              ),
+              const SizedBox(height: 5),
+              ConstrainedBox(
+                constraints: BoxConstraints(minHeight: context.screenSize.height * 0.45),
+                child: _getCalendar(),
+              ),
+            ],
           ),
         ),
       ),
@@ -138,6 +149,19 @@ class CalendarAlert extends ConsumerWidget {
             //           context: context,
             //           widget: DailyMoneyDisplayAlert(date: DateTime.parse('$generateYmd 00:00:00'), isar: widget.isar, moneyMap: moneyMap),
             //         ),
+
+            onTap: (_calendarDays[i] == '')
+                ? null
+                : (calendarMap[generateYmd] == null)
+                    ? null
+                    : () {
+                        VideoDialog(
+                          context: _context,
+                          widget: GetPublishVideoListAlert(
+                              type: type, date: DateTime.parse('$generateYmd 00:00:00'), videoList: calendarMap[generateYmd]),
+                        );
+                      },
+
             child: Container(
               margin: const EdgeInsets.all(1),
               padding: const EdgeInsets.all(2),
@@ -171,7 +195,11 @@ class CalendarAlert extends ConsumerWidget {
                         const SizedBox(height: 5),
                         ConstrainedBox(
                           constraints: BoxConstraints(minHeight: _context.screenSize.height / 25),
-                          child: Container(),
+                          child: Column(
+                            children: [
+                              Text((calendarMap[generateYmd] != null) ? calendarMap[generateYmd]!.length.toString() : ''),
+                            ],
+                          ),
                         ),
                       ],
                     ),
@@ -182,5 +210,48 @@ class CalendarAlert extends ConsumerWidget {
     }
 
     return Row(crossAxisAlignment: CrossAxisAlignment.start, children: list);
+  }
+
+  ///
+  void makeCalendarMap() {
+    final videoList = _ref.watch(videoListProvider.select((value) => value.videoList));
+
+    if (type == 'get') {
+      videoList
+        ..forEach((element) {
+          var getdate = '';
+
+          if (element.getdate != 'null') {
+            final year = element.getdate.substring(0, 4);
+            final month = element.getdate.substring(4, 6);
+            final day = element.getdate.substring(6);
+            getdate = '$year-$month-$day';
+          }
+
+          calendarMap[getdate] = [];
+        })
+        ..forEach((element) {
+          var getdate = '';
+
+          if (element.getdate != 'null') {
+            final year = element.getdate.substring(0, 4);
+            final month = element.getdate.substring(4, 6);
+            final day = element.getdate.substring(6);
+            getdate = '$year-$month-$day';
+          }
+
+          calendarMap[getdate]?.add(element);
+        });
+    }
+
+    if (type == 'publish') {
+      videoList
+        ..forEach((element) {
+          calendarMap[element.pubdate] = [];
+        })
+        ..forEach((element) {
+          calendarMap[element.pubdate]?.add(element);
+        });
+    }
   }
 }

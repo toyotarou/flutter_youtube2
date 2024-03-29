@@ -1,9 +1,8 @@
 // ignore_for_file: must_be_immutable
 
+import 'package:fab_circular_menu_plus/fab_circular_menu_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_youtube2/screens/components/calendar_alert.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../extensions/extensions.dart';
 import '../models/category.dart';
@@ -13,6 +12,7 @@ import '../state/small_category/small_category_notifier.dart';
 import '../state/video_list/video_list_notifier.dart';
 import '../utility/function.dart';
 import 'components/bunrui_blank_video_alert.dart';
+import 'components/calendar_alert.dart';
 import 'components/pages/category_list_page.dart';
 import 'components/parts/video_dialog.dart';
 import 'components/video_bunrui_list_alert.dart';
@@ -70,11 +70,10 @@ class HomeScreen extends ConsumerWidget {
               child: Row(
                 children: [
                   GestureDetector(
-                    onTap: () {
-                      VideoDialog(
-                        context: context,
-                        widget: CalendarAlert(type: 'get'),
-                      );
+                    onTap: () async {
+                      await _ref.read(videoListProvider.notifier).getAllVideoList();
+
+                      await onTapGood3(() => VideoDialog(context: context, widget: CalendarAlert(type: 'get')));
                     },
                     child: const SizedBox(
                       width: 60,
@@ -82,11 +81,10 @@ class HomeScreen extends ConsumerWidget {
                     ),
                   ),
                   GestureDetector(
-                    onTap: () {
-                      VideoDialog(
-                        context: context,
-                        widget: CalendarAlert(type: 'publish'),
-                      );
+                    onTap: () async {
+                      await _ref.read(videoListProvider.notifier).getAllVideoList();
+
+                      await onTapGood3(() => VideoDialog(context: context, widget: CalendarAlert(type: 'publish')));
                     },
                     child: const SizedBox(
                       width: 60,
@@ -120,43 +118,46 @@ class HomeScreen extends ConsumerWidget {
 
         //
 
-        // floatingActionButton: FabCircularMenuPlus(
-        //   ringColor: Colors.blueAccent.withOpacity(0.3),
-        //   fabOpenColor: Colors.blueAccent.withOpacity(0.3),
-        //   fabCloseColor: Colors.blueAccent.withOpacity(0.3),
-        //   ringWidth: 10,
-        //   ringDiameter: 250,
-        //   children: <Widget>[
-        //     IconButton(
-        //       icon: const Icon(Icons.recycling, color: Colors.purpleAccent),
-        //       onPressed: () {},
-        //       // onPressed: () {
-        //       //   Navigator.pushNamed(context, '/recycle');
-        //       // },
-        //     ),
-        //     IconButton(
-        //       icon: const Icon(Icons.star),
-        //       onPressed: () => BunruiDialog(context: context, widget: SpecialVideoAlert()),
-        //     ),
-        //     IconButton(
-        //       icon: const Icon(Icons.arrow_downward),
-        //       onPressed: () => BunruiDialog(context: context, widget: HistoryVideoAlert()),
-        //     ),
-        //     IconButton(
-        //       icon: const Icon(Icons.search),
-        //       onPressed: () => BunruiDialog(context: context, widget: SearchVideoAlert()),
-        //     ),
-        //     IconButton(
-        //       icon: const Icon(Icons.refresh, color: Colors.yellowAccent),
-        //       onPressed: () {
-        //         Navigator.pushReplacement(
-        //           context,
-        //           MaterialPageRoute(builder: (context) => HomeScreen()),
-        //         );
-        //       },
-        //     ),
-        //   ],
-        // ),
+        floatingActionButton: FabCircularMenuPlus(
+          ringColor: Colors.blueAccent.withOpacity(0.3),
+          fabOpenColor: Colors.blueAccent.withOpacity(0.3),
+          fabCloseColor: Colors.blueAccent.withOpacity(0.3),
+          ringWidth: 10,
+          ringDiameter: 250,
+          children: <Widget>[
+            IconButton(
+              icon: const Icon(Icons.recycling, color: Colors.purpleAccent),
+              onPressed: () {},
+              // onPressed: () {
+              //   Navigator.pushNamed(context, '/recycle');
+              // },
+            ),
+            IconButton(
+              icon: const Icon(Icons.star),
+//              onPressed: () => BunruiDialog(context: context, widget: SpecialVideoAlert()),
+              onPressed: () {},
+            ),
+            IconButton(
+              icon: const Icon(Icons.arrow_downward),
+//              onPressed: () => BunruiDialog(context: context, widget: HistoryVideoAlert()),
+              onPressed: () {},
+            ),
+            IconButton(
+              icon: const Icon(Icons.search),
+//              onPressed: () => BunruiDialog(context: context, widget: SearchVideoAlert()),
+              onPressed: () {},
+            ),
+            IconButton(
+              icon: const Icon(Icons.refresh, color: Colors.yellowAccent),
+              onPressed: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => HomeScreen()),
+                );
+              },
+            ),
+          ],
+        ),
 
         endDrawer: _dispEndDrawer(),
       ),
@@ -384,7 +385,7 @@ class HomeScreen extends ConsumerWidget {
                       const SizedBox(width: 20),
                       const SizedBox(height: 10),
                       GestureDetector(
-                        onTap: () => _openBrowser(youtubeId: element.youtubeId),
+                        onTap: () => openBrowser(youtubeId: element.youtubeId, ref: _ref),
                         child: const Icon(Icons.link),
                       ),
                     ],
@@ -429,15 +430,5 @@ class HomeScreen extends ConsumerWidget {
     return SingleChildScrollView(
       child: DefaultTextStyle(style: const TextStyle(fontSize: 12), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: list)),
     );
-  }
-
-  ///
-  Future<void> _openBrowser({required String youtubeId}) async {
-    await _ref.read(videoListProvider.notifier).updateVideoPlayedAt(youtubeId: youtubeId);
-
-    final url = Uri.parse('https://youtu.be/$youtubeId');
-    if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
-      throw Exception('Could not launch $url');
-    }
   }
 }
