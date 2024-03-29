@@ -3,6 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../data/http/client.dart';
 import '../../data/http/path.dart';
 import '../../extensions/extensions.dart';
+import '../../models/special_video.dart';
 import '../../models/video.dart';
 import '../../utility/utility.dart';
 import 'video_list_response_state.dart';
@@ -106,6 +107,31 @@ class VideoListNotifier extends StateNotifier<VideoListResponseState> {
       }
 
       state = state.copyWith(videoList: list);
+    }).catchError((error, _) {
+      utility.showError('予期せぬエラーが発生しました');
+    });
+  }
+
+  ///
+  Future<void> getSpecialVideo() async {
+    await client.post(path: APIPath.getSpecialVideo).then((value) {
+      final list = <SpecialVideo>[];
+      for (var i = 0; i < value['data'].length.toString().toInt(); i++) {
+        final list2 = <Video>[];
+        for (var j = 0; j < value['data'][i]['item'].length.toString().toInt(); j++) {
+          list2.add(Video.fromJson(value['data'][i]['item'][j] as Map<String, dynamic>));
+        }
+
+        list.add(
+          SpecialVideo(
+            bunrui: value['data'][i]['bunrui'].toString(),
+            count: value['data'][i]['count'].toString().toInt(),
+            item: list2,
+          ),
+        );
+      }
+
+      state = state.copyWith(specialVideoList: list);
     }).catchError((error, _) {
       utility.showError('予期せぬエラーが発生しました');
     });

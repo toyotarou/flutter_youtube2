@@ -2,6 +2,7 @@
 
 import 'package:fab_circular_menu_plus/fab_circular_menu_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_youtube2/screens/components/special_video_alert.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../extensions/extensions.dart';
@@ -134,8 +135,11 @@ class HomeScreen extends ConsumerWidget {
             ),
             IconButton(
               icon: const Icon(Icons.star),
-//              onPressed: () => BunruiDialog(context: context, widget: SpecialVideoAlert()),
-              onPressed: () {},
+              onPressed: () {
+                _ref.read(videoListProvider.notifier).getSpecialVideo();
+
+                VideoDialog(context: context, widget: SpecialVideoAlert());
+              },
             ),
             IconButton(
               icon: const Icon(Icons.arrow_downward),
