@@ -13,12 +13,12 @@ Future<void> VideoDialog({
 }) {
   return showDialog(
     context: context,
-    barrierColor: clearBarrierColor? Colors.transparent:Colors.black.withOpacity(0.1),
+    barrierColor: clearBarrierColor ? Colors.transparent : Colors.black.withOpacity(0.1),
     builder: (_) {
       return Container(
         padding: EdgeInsets.only(top: paddingTop, right: paddingRight, bottom: paddingBottom, left: paddingLeft),
         child: Dialog(
-          backgroundColor: Colors.blueGrey.withOpacity(0.3),
+          backgroundColor: Colors.blueGrey.withOpacity(0.5),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
           insetPadding: const EdgeInsets.all(30),
           child: widget,

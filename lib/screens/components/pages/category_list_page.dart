@@ -28,6 +28,7 @@ class CategoryListPage extends ConsumerWidget {
     _ref = ref;
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Stack(
         fit: StackFit.expand,
         children: [

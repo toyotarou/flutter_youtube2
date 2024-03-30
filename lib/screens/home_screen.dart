@@ -2,6 +2,7 @@
 
 import 'package:fab_circular_menu_plus/fab_circular_menu_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_youtube2/screens/components/search_video_alert.dart';
 import 'package:flutter_youtube2/screens/components/special_video_alert.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -148,8 +149,14 @@ class HomeScreen extends ConsumerWidget {
             ),
             IconButton(
               icon: const Icon(Icons.search),
-//              onPressed: () => BunruiDialog(context: context, widget: SearchVideoAlert()),
-              onPressed: () {},
+              onPressed: () {
+                ref.read(videoListProvider.notifier).getAllVideoList();
+
+                VideoDialog(
+                  context: context,
+                  widget: SearchVideoAlert(),
+                );
+              },
             ),
             IconButton(
               icon: const Icon(Icons.refresh, color: Colors.yellowAccent),
