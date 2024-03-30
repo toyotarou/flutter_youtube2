@@ -2,6 +2,8 @@
 
 import 'package:fab_circular_menu_plus/fab_circular_menu_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_youtube2/models/video.dart';
+import 'package:flutter_youtube2/screens/components/bunrui_devide_video_list_alert.dart';
 import 'package:flutter_youtube2/screens/components/search_video_alert.dart';
 import 'package:flutter_youtube2/screens/components/special_video_alert.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -42,7 +44,7 @@ class HomeScreen extends ConsumerWidget {
     _context = context;
     _ref = ref;
 
-    makeBigCategoryTab();
+    _makeBigCategoryTab();
 
     if (tabs.isEmpty) {
       return Container();
@@ -187,6 +189,24 @@ class HomeScreen extends ConsumerWidget {
       smallCategoryList = _ref.watch(smallCategoryProvider(bunruiMap[bunrui]!['category1']!).select((value) => value.smallCategoryList));
     }
 
+    //============================//
+
+    final videoList = _ref.watch(videoListProvider.select((value) => value.videoList));
+
+    final videoNumThreeOverChannelMap = <String, List<Video>>{};
+    videoList
+      ..forEach((element) => videoNumThreeOverChannelMap[element.channelTitle] = [])
+      ..forEach((element) => videoNumThreeOverChannelMap[element.channelTitle]?.add(element));
+
+    final videoNumThreeOverChannelList = <String>[];
+    videoNumThreeOverChannelMap.forEach((key, value) {
+      if (value.length >= 3) {
+        videoNumThreeOverChannelList.add(key);
+      }
+    });
+
+    //============================//
+
     return Drawer(
       backgroundColor: Colors.blueGrey.withOpacity(0.2),
       child: Container(
@@ -321,6 +341,34 @@ class HomeScreen extends ConsumerWidget {
               ],
             ),
             Divider(color: Colors.white.withOpacity(0.4), thickness: 5),
+            if (videoNumThreeOverChannelList.isNotEmpty) ...[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(),
+                  GestureDetector(
+                    onTap: () {
+                      VideoDialog(
+                        context: _context,
+                        widget: BunruiDevideVideoListAlert(
+                          videoNumThreeOverChannelList: videoNumThreeOverChannelList,
+                            videoNumThreeOverChannelMap:videoNumThreeOverChannelMap,
+                        ),
+                      );
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+                      decoration: BoxDecoration(
+                        color: Colors.orangeAccent.withOpacity(0.3),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: const Text('分類わけ', style: TextStyle(fontSize: 12)),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+            const SizedBox(height: 20),
             Expanded(child: _displayVideoList()),
           ],
         ),
@@ -329,7 +377,7 @@ class HomeScreen extends ConsumerWidget {
   }
 
   ///
-  void makeBigCategoryTab() {
+  void _makeBigCategoryTab() {
     tabs.clear();
 
     final bigCategoryList = _ref.watch(bigCategoryProvider.select((value) => value.bigCategoryList));

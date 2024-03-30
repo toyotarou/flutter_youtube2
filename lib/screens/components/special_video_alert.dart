@@ -1,4 +1,4 @@
-// ignore_for_file: must_be_immutable, cascade_invocations
+// ignore_for_file: must_be_immutable
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -46,9 +46,7 @@ class SpecialVideoAlert extends ConsumerWidget {
   Widget displayOrderedSpecialVideoList() {
     final list = <Widget>[];
 
-    final specialVideoList = _ref.watch(videoListProvider.select((value) => value.specialVideoList));
-
-    specialVideoList.forEach((element2) {
+    _ref.watch(videoListProvider.select((value) => value.specialVideoList)).forEach((element2) {
       list.add(ExpansionTile(
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
