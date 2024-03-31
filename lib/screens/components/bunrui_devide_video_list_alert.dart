@@ -15,11 +15,13 @@ class BunruiDevideVideoListAlert extends ConsumerWidget {
 
   final Map<String, List<Video>> videoNumThreeOverChannelMap;
 
+  late BuildContext _context;
   late WidgetRef _ref;
 
   ///
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    _context = context;
     _ref = ref;
 
     return AlertDialog(
@@ -38,6 +40,31 @@ class BunruiDevideVideoListAlert extends ConsumerWidget {
             children: [
               const SizedBox(height: 20),
               Container(width: context.screenSize.width),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(),
+                  GestureDetector(
+                    onTap: () async {
+                      await _ref.read(videoListProvider.notifier).manipulateVideoList(bunrui: 'erase');
+
+                      await onTapGood3(() async {
+                        Navigator.pop(_context);
+
+                        Navigator.pop(_context);
+                      });
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+                      decoration: BoxDecoration(
+                        color: Colors.blueAccent.withOpacity(0.3),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: const Text('分類消去', style: TextStyle(fontSize: 12)),
+                    ),
+                  ),
+                ],
+              ),
               Expanded(child: displayBunruiDevideList()),
             ],
           ),
@@ -93,9 +120,7 @@ class BunruiDevideVideoListAlert extends ConsumerWidget {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                (element.special == '1')
-                                    ? const Icon(Icons.star, color: Colors.greenAccent)
-                                    : Icon(Icons.star, color: Colors.grey.withOpacity(0.3)),
+                                Icon(Icons.star, color: (element.special == '1') ? Colors.greenAccent : Colors.grey.withOpacity(0.3)),
                                 const SizedBox(height: 10),
                                 GestureDetector(
                                   onTap: () {

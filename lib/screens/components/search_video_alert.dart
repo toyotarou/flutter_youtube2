@@ -113,16 +113,9 @@ class SearchVideoAlert extends ConsumerWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          (element.special == '1')
-                              ? const Icon(Icons.star, color: Colors.greenAccent)
-                              : Icon(Icons.star, color: Colors.grey.withOpacity(0.3)),
+                          Icon(Icons.star, color: (element.special == '1') ? Colors.greenAccent : Colors.grey.withOpacity(0.3)),
                           const SizedBox(height: 10),
-                          GestureDetector(
-                            onTap: () {
-                              _ref.read(videoListProvider.notifier).setYoutubeIdList(youtubeId: element.youtubeId);
-                            },
-                            child: const Icon(Icons.control_point),
-                          ),
+                          Container(),
                           const SizedBox(width: 20),
                           const SizedBox(height: 10),
                           GestureDetector(
